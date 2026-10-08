@@ -1,0 +1,18 @@
+{
+  "name": "claude-copy-blocks",
+  "description": "copy-blocks: one-click copy buttons for code blocks in Claude Code replies",
+  "owner": { "name": "Ilya Makarov", "url": "https://github.com/imakarov" },
+  "plugins": [
+    {
+      "name": "copy-blocks",
+      "description": "One-click copy buttons for the code blocks in Claude's last reply: exact text, no terminal borders, indentation or wrap artifacts",
+      "version": "0.1.0",
+      "author": { "name": "Ilya Makarov", "url": "https://github.com/imakarov" },
+      "source": "./",
+      "category": "productivity",
+      "homepage": "https://github.com/imakarov/claude-copy-blocks",
+      "license": "MIT",
+      "keywords": ["clipboard", "copy", "code-blocks", "terminal"]
+    }
+  ]
+}
