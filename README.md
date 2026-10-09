@@ -1,23 +1,63 @@
 # copy-blocks
 
-One-click copy buttons for the code blocks in Claude Code's replies.
+Copy Claude's drafts out of the terminal exactly as written: emails, LinkedIn
+posts, Telegram and Slack replies, messages, quotes. One click, nothing to fix
+after pasting.
 
-Copying text out of a terminal is lossy: you pick up the quote bar on the left,
-the leading indentation Claude Code adds to its output, and hard line breaks
-wherever the terminal wrapped a long line. Pasting an email draft, a shell
-command or a config snippet then means cleaning it up by hand.
+## The problem
 
-copy-blocks fixes that. After every reply, each fenced code block (```` ``` ````
-or `~~~`) in it gets a button above the prompt. Click it and the block's exact
-text goes to your clipboard: no borders, no indentation, no wrap artifacts.
+You ask Claude Code to draft a reply to a client, a LinkedIn post or an answer
+in a Telegram chat. The text is good. Then you select it in the terminal, paste
+it into Gmail or LinkedIn, and it comes out broken:
+
+- every line starts with extra spaces, because Claude Code indents its output;
+- sentences are cut into pieces wherever the terminal wrapped a long line;
+- a quote bar or border characters come along with the text.
+
+So before sending you spend a minute deleting spaces and joining lines back
+together. Every single time.
+
+## What copy-blocks does
+
+Ask Claude to put the text you will send inside a block (see
+[the CLAUDE.md snippet](#make-claude-put-drafts-in-blocks) below). After the
+reply, each block gets a button above the prompt. Click it and the exact text
+goes to your clipboard: the paragraphs Claude wrote, no extra spaces, no broken
+lines. Paste it into the email, the post or the chat and send.
 
 ```
- [ 📋 1 ]  git switch -c fix/login-redirect && git push -u origin HEAD
- [ 📋 2 ]  Hi Sam, Thanks for the quick review. I pushed the fix and…
- [ 📋 3 ]  {"compilerOptions": {"strict": true, "noEmit": true}}
+ [ 📋 1 ]  Hi Sam, thanks for the quick review. I pushed the fix and…
+ [ 📋 2 ]  Three things I learned shipping our first AI feature to 10k u…
+ [ 📋 3 ]  Sounds good, let's do Thursday at 3pm. I'll send the invite.
  ×
  ──────────────────────────────────────────────────────────────────────
  >
+```
+
+One reply can hold several versions (a formal and a casual answer, a post and
+its first comment), and each gets its own button.
+
+Works for:
+
+- **email replies** and cold emails;
+- **LinkedIn** posts, comments and DMs;
+- **Telegram, WhatsApp, Slack** answers;
+- quotes, bios, announcements, review replies;
+- and, of course, commands and code snippets.
+
+## Make Claude put drafts in blocks
+
+copy-blocks gives a button to every fenced block (```` ``` ```` or `~~~`) in
+Claude's reply. Commands and code already come in blocks; drafts of messages
+usually come as plain paragraphs. Add this to `~/.claude/CLAUDE.md` (or a
+project `CLAUDE.md`) so they come in blocks too:
+
+```markdown
+## Text I will send
+When a reply contains text I will paste somewhere else (an email, a LinkedIn
+post or comment, a Telegram/Slack/WhatsApp message, a quote, a command), put
+each piece in its own fenced code block with no commentary inside the block.
+If there are several versions, give each its own block, the main one first.
 ```
 
 ## Install
@@ -70,35 +110,23 @@ Use only one install method. Loading the plugin twice draws the buttons twice.
 
 Each row shows a one-line preview of the block so you can tell them apart.
 
-## Recommended CLAUDE.md snippet
-
-The plugin only sees fenced blocks, so it helps to ask Claude to put anything
-you are likely to paste elsewhere inside one. Add this to `~/.claude/CLAUDE.md`
-or a project `CLAUDE.md`:
-
-```markdown
-## Pasteable text
-When a reply contains text I will paste somewhere else (a command, an email or
-message draft, a config snippet, a commit message), put each piece in its own
-fenced code block with no extra commentary inside the block.
-```
-
 ## Limits
 
 - Up to 9 blocks per reply; later ones get no button.
 - Only the last reply. The band is replaced when the next reply completes.
+- Text outside blocks gets no button: that is what the CLAUDE.md snippet is for.
 - Clicking needs a terminal that reports mouse clicks to the application. Where
   it does not, use `/cp N` or `ctrl+x` `tab` and a digit.
-- Works in any terminal Claude Code runs in (for example the Orca terminal);
-  copying goes through Claude Code's own clipboard support, not the terminal's
-  text selection.
+- Works in any terminal Claude Code runs in (Terminal.app, iTerm2, Ghostty,
+  the VS Code terminal, Orca): copying goes through Claude Code's own clipboard
+  support, not the terminal's text selection.
 
 ## Requirements
 
 A Claude Code build with plugin hooks modules (mods): `hooks/hooks.json` with
 `"modules"`, the `AbovePrompt` UI surface and `$.ui.copy`. Developed and tested
-on Claude Code 2.1.294. Run `claude plugin validate <plugin folder>` to check
-whether your build supports it.
+on Claude Code 2.1.294–2.1.295. Run `claude plugin validate <plugin folder>` to
+check whether your build supports it.
 
 ## Development
 

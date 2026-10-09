@@ -1,18 +1,33 @@
 {
   "name": "claude-copy-blocks",
-  "description": "copy-blocks: one-click copy buttons for code blocks in Claude Code replies",
-  "owner": { "name": "Ilya Makarov", "url": "https://github.com/imakarov" },
+  "description": "copy-blocks: copy Claude's email, post and message drafts out of the terminal without fixing spaces and line breaks",
+  "owner": {
+    "name": "Ilya Makarov",
+    "url": "https://github.com/imakarov"
+  },
   "plugins": [
     {
       "name": "copy-blocks",
-      "description": "One-click copy buttons for the code blocks in Claude's last reply: exact text, no terminal borders, indentation or wrap artifacts",
+      "description": "One-click copy for Claude's drafts in the terminal: emails, LinkedIn posts, Telegram and Slack replies, commands. Exact text, no extra spaces or broken lines to fix after pasting",
       "version": "0.1.1",
-      "author": { "name": "Ilya Makarov", "url": "https://github.com/imakarov" },
+      "author": {
+        "name": "Ilya Makarov",
+        "url": "https://github.com/imakarov"
+      },
       "source": "./",
       "category": "productivity",
       "homepage": "https://github.com/imakarov/claude-copy-blocks",
       "license": "MIT",
-      "keywords": ["clipboard", "copy", "code-blocks", "terminal"]
+      "keywords": [
+        "clipboard",
+        "copy",
+        "email",
+        "linkedin",
+        "messages",
+        "writing",
+        "terminal",
+        "code-blocks"
+      ]
     }
   ]
 }
