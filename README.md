@@ -115,6 +115,9 @@ Each row shows a one-line preview of the block so you can tell them apart.
 - Up to 9 blocks per reply; later ones get no button.
 - Only the last reply. The band is replaced when the next reply completes.
 - Text outside blocks gets no button: that is what the CLAUDE.md snippet is for.
+- LinkedIn's post editor often drops empty lines between paragraphs on paste.
+  The blank lines are in the copied text; LinkedIn removes them. Check the
+  spacing in the editor and add them back with Enter before posting.
 - Clicking needs a terminal that reports mouse clicks to the application. Where
   it does not, use `/cp N` or `ctrl+x` `tab` and a digit.
 - Works in any terminal Claude Code runs in (Terminal.app, iTerm2, Ghostty,
