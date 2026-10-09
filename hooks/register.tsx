@@ -9,7 +9,13 @@ export function extractBlocks(markdown: string): string[] {
   const found: string[] = []
   const fence = /^([ \t]*)(`{3,}|~{3,})[^\n]*\n([\s\S]*?)\n[ \t]*\2[ \t]*$/gm
   for (const m of markdown.matchAll(fence)) {
-    const body = m[3].replace(/\s+$/, '')
+    // A fence nested in a list is indented; drop that indent from every line.
+    const indent = m[1].length
+    const body = m[3]
+      .split('\n')
+      .map(line => line.replace(new RegExp(`^[ \\t]{0,${indent}}`), ''))
+      .join('\n')
+      .replace(/\s+$/, '')
     if (body.trim()) found.push(body)
   }
   return found.slice(0, 9)
@@ -31,6 +37,8 @@ export const register: Register = on => {
 
   on('turn.complete', async ($, e, next) => {
     const result = await next(e)
+    // Only the main loop's answers: a subagent's turn or an interrupted one keeps the band.
+    if (e.agentId || e.reason !== 'answer') return result
     const found = extractBlocks(result.text ?? '')
     await update($, blocks, () => found)
     await update($, isHidden, () => false)

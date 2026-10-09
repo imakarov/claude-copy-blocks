@@ -6,7 +6,7 @@
     {
       "name": "copy-blocks",
       "description": "One-click copy buttons for the code blocks in Claude's last reply: exact text, no terminal borders, indentation or wrap artifacts",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "author": { "name": "Ilya Makarov", "url": "https://github.com/imakarov" },
       "source": "./",
       "category": "productivity",
