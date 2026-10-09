@@ -9,7 +9,7 @@
     {
       "name": "copy-blocks",
       "description": "One-click copy for Claude's drafts in the terminal: emails, LinkedIn posts, Telegram and Slack replies, commands. Exact text, no extra spaces or broken lines to fix after pasting",
-      "version": "0.1.1",
+      "version": "0.2.0",
       "author": {
         "name": "Ilya Makarov",
         "url": "https://github.com/imakarov"

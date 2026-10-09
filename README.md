@@ -19,9 +19,9 @@ together. Every single time.
 
 ## What copy-blocks does
 
-Ask Claude to put the text you will send inside a block (see
+Ask Claude to put the text you will send inside a block or a quote (see
 [the CLAUDE.md snippet](#make-claude-put-drafts-in-blocks) below). After the
-reply, each block gets a button above the prompt. Click it and the exact text
+reply, each block and each quote gets a button above the prompt. Click it and the exact text
 goes to your clipboard: the paragraphs Claude wrote, no extra spaces, no broken
 lines. Paste it into the email, the post or the chat and send.
 
@@ -47,9 +47,10 @@ Works for:
 
 ## Make Claude put drafts in blocks
 
-copy-blocks gives a button to every fenced block (```` ``` ```` or `~~~`) in
-Claude's reply. Commands and code already come in blocks; drafts of messages
-usually come as plain paragraphs. Add this to `~/.claude/CLAUDE.md` (or a
+copy-blocks gives a button to every fenced block (```` ``` ```` or `~~~`) and
+every quote (lines starting with `>`) in Claude's reply. A quote is copied
+without the `>` markers, paragraphs kept. Commands and code already come in
+blocks; drafts of messages often come as plain paragraphs. Add this to `~/.claude/CLAUDE.md` (or a
 project `CLAUDE.md`) so they come in blocks too:
 
 ```markdown
@@ -112,9 +113,10 @@ Each row shows a one-line preview of the block so you can tell them apart.
 
 ## Limits
 
-- Up to 9 blocks per reply; later ones get no button.
+- Up to 9 blocks and quotes per reply; later ones get no button.
 - Only the last reply. The band is replaced when the next reply completes.
-- Text outside blocks gets no button: that is what the CLAUDE.md snippet is for.
+- Plain paragraphs get no button: that is what the CLAUDE.md snippet is for.
+- Markdown inside a quote (`**bold**`, links) is copied as written.
 - LinkedIn's post editor often drops empty lines between paragraphs on paste.
   The blank lines are in the copied text; LinkedIn removes them. Check the
   spacing in the editor and add them back with Enter before posting.
@@ -141,8 +143,8 @@ claude --plugin-dir .      # try it in a session; edits hot-reload
 
 Files:
 
-- `hooks/register.tsx` — the hooks module: block extraction, the button band, `/cp`
-- `hooks/blocks.test.ts` — tests for block extraction
+- `hooks/register.tsx` — the hooks module: block and quote extraction, the button band, `/cp`
+- `hooks/blocks.test.ts` — tests for block and quote extraction
 - `types/index.d.ts` — the plugin's state contract
 - `.claude-plugin/plugin.json` — plugin manifest
 - `.claude-plugin/marketplace.json` — makes the repo installable as a marketplace

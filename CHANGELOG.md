@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.0 — 2026-10-09
+
+- Quotes: every blockquote (`>` lines) in the reply gets a button too, copied
+  without the `>` markers. Blocks and quotes are numbered in reply order.
+
 ## 0.1.1 — 2026-10-09
 
 - Fix: blocks nested in list items are copied without the list indentation.

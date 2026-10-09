@@ -4,19 +4,36 @@ import type { Register } from 'claude-code'
 const blocks = atom({ plugin: 'copy-blocks', key: 'blocks' } as const, [] as string[])
 const isHidden = atom({ plugin: 'copy-blocks', key: 'isHidden' } as const, false)
 
-// Fenced blocks (``` or ~~~) of a markdown reply, info string dropped.
+// Fenced blocks (``` or ~~~, info string dropped) and blockquotes (> dropped)
+// of a markdown reply, in the order they appear.
 export function extractBlocks(markdown: string): string[] {
   const found: string[] = []
-  const fence = /^([ \t]*)(`{3,}|~{3,})[^\n]*\n([\s\S]*?)\n[ \t]*\2[ \t]*$/gm
-  for (const m of markdown.matchAll(fence)) {
-    // A fence nested in a list is indented; drop that indent from every line.
-    const indent = m[1].length
-    const body = m[3]
-      .split('\n')
-      .map(line => line.replace(new RegExp(`^[ \\t]{0,${indent}}`), ''))
-      .join('\n')
-      .replace(/\s+$/, '')
-    if (body.trim()) found.push(body)
+  const lines = markdown.split('\n')
+  const push = (body: string) => {
+    const text = body.replace(/^\s*\n/, '').replace(/\s+$/, '')
+    if (text.trim()) found.push(text)
+  }
+  let i = 0
+  while (i < lines.length) {
+    const open = /^([ \t]*)(`{3,}|~{3,})/.exec(lines[i])
+    if (open) {
+      const [, indent, fence] = open
+      const close = new RegExp(`^[ \\t]*${fence[0] === '`' ? '`' : '~'}{${fence.length},}[ \\t]*$`)
+      const end = lines.findIndex((line, j) => j > i && close.test(line))
+      if (end === -1) { i++; continue }
+      // A fence nested in a list is indented; drop that indent from every line.
+      const strip = new RegExp(`^[ \\t]{0,${indent.length}}`)
+      push(lines.slice(i + 1, end).map(line => line.replace(strip, '')).join('\n'))
+      i = end + 1
+      continue
+    }
+    if (/^[ \t]*>/.test(lines[i])) {
+      const quote: string[] = []
+      while (i < lines.length && /^[ \t]*>/.test(lines[i])) quote.push(lines[i++].replace(/^[ \t]*> ?/, ''))
+      push(quote.join('\n'))
+      continue
+    }
+    i++
   }
   return found.slice(0, 9)
 }
@@ -30,7 +47,7 @@ export const register: Register = on => {
   on('session.start', async ($, e, next) => {
     await $.command.register({
       name: 'cp',
-      description: 'Copy code block N (default 1) of the last reply to the clipboard',
+      description: 'Copy block or quote N (default 1) of the last reply to the clipboard',
     })
     return next(e)
   })
@@ -49,7 +66,7 @@ export const register: Register = on => {
     const list = await read($, blocks)
     const n = Number.parseInt(e.args.trim() || '1', 10)
     const text = list[n - 1]
-    if (!text) return { text: list.length ? `No block ${n}. Available: 1–${list.length}.` : 'No code blocks in the last reply.' }
+    if (!text) return { text: list.length ? `No block ${n}. Available: 1–${list.length}.` : 'No blocks or quotes in the last reply.' }
     const r = await $.ui.copy({ text })
     return { text: r.isCopied ? `📋 Block ${n} copied` : `Copy failed: ${r.reason}` }
   })
